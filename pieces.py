@@ -67,13 +67,11 @@ def get_logger(name, setting_dict, file_anchor=None):
         for handler in handlers:
             filename = setting_dict['handlers'][handler].get('filename', '')
             if filename:
-                filepath = Path(filename)
-                if filepath.is_absolute():
+                if Path(filename).is_absolute():
                     warnings.warn(f"{name} logger's file already is absolute path!", ResourceWarning)
                 else:
                     filepath = abs_path(filename, anchor=file_anchor)
                     setting_dict['handlers'][handler]['filename'] = str(filepath)
-                filepath.parent.mkdir(parents=True, exist_ok=True)
     logging.config.dictConfig(setting_dict)
     return logging.getLogger(name)
 
