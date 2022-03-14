@@ -52,7 +52,7 @@ def abs_path(*path, anchor):
     return path.resolve()  # 消除相对目录中的.和..
 
 
-def get_logger(name, setting_dict, file_anchor=None):
+def get_logger(name, setting_dict, file_anchor=None, mkdir=True):
     """
     根据配置字典和名称创建相应的logger对象
 
@@ -60,19 +60,21 @@ def get_logger(name, setting_dict, file_anchor=None):
     :param setting_dict: logger的配置字典
     :param file_anchor: 文件锚点，某些情况下，比如crontab定时任务，所有路径必须为绝对路径，该参数会和配置文件中的路径拼接形成
                         最终的路径，如果配置文件中的路径已经为绝对路径，则会抛出警告，并以配置文件为准
+    :param mkdir: 如果filename指定的路径不存在，是否创建
     :return: logger对象
     """
-    for handler in setting_dict['handlers'].values():
-        filename = handler.get('filename', '')
+    for name, config in setting_dict['handlers'].items():
+        filename = config.get('filename', '')
         if filename:
             filename = Path(filename)
             if filename.is_absolute():
-                warnings.warn(f"{name} logger's file already is absolute path!", ResourceWarning)
+                warnings.warn(f"{name}'s file already is absolute path!", ResourceWarning)
             else:
                 if file_anchor:
                     filename = abs_path(filename, anchor=file_anchor)
-                    handler['filename'] = str(filename)
-            filename.parent.mkdir(parents=True, exist_ok=True)
+                    config['filename'] = str(filename)
+            if mkdir:
+                filename.parent.mkdir(parents=True, exist_ok=True)
     logging.config.dictConfig(setting_dict)
     return logging.getLogger(name)
 
