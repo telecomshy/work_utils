@@ -55,15 +55,15 @@ class TidyMysql:
         rows = self.fetch_all(sql, (self.database, table_name))
         return select_column(rows, 'COLUMN_NAME')
 
-    def query_to_file(self, sql, filename, header=None, include_header=False, file_type='csv'):
+    def query_to_file(self, sql, filename, header=None, file_type='csv'):
         rows = self.fetch_all(sql)
         save = getattr(pieces, f'write_to_{file_type}')
-        save(filename, rows, header=header, include_header=include_header)
+        save(filename, rows, header=header)
 
-    def table_to_file(self, table_name, filename, include_header=False, file_type='csv'):
+    def table_to_file(self, table_name, filename, file_type='csv'):
         sql = f'SELECT * FROM {table_name}'
         header = self.get_table_header(table_name)
-        self.query_to_file(sql, filename, header=header, include_header=include_header, file_type=file_type)
+        self.query_to_file(sql, filename, header=header, file_type=file_type)
 
     def get_table_last_modified_time(self, table_name):
         sql = 'SELECT UPDATE_TIME, CREATE_TIME FROM information_schema.TABLES WHERE TABLE_NAME = %s ' \
