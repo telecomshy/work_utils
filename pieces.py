@@ -62,16 +62,17 @@ def get_logger(name, setting_dict, file_anchor=None):
                         最终的路径，如果配置文件中的路径已经为绝对路径，则会抛出警告，并以配置文件为准
     :return: logger对象
     """
-    if file_anchor is not None:
-        handlers = setting_dict['loggers'][name]['handlers']
-        for handler in handlers:
-            filename = setting_dict['handlers'][handler].get('filename', '')
-            if filename:
-                if Path(filename).is_absolute():
-                    warnings.warn(f"{name} logger's file already is absolute path!", ResourceWarning)
-                else:
-                    filepath = abs_path(filename, anchor=file_anchor)
-                    setting_dict['handlers'][handler]['filename'] = str(filepath)
+    for handler in setting_dict['handlers'].values():
+        filename = handler.get('filename', '')
+        if filename:
+            filename = Path(filename)
+            if filename.is_absolute():
+                warnings.warn(f"{name} logger's file already is absolute path!", ResourceWarning)
+            else:
+                if file_anchor:
+                    filename = abs_path(filename, anchor=file_anchor)
+                    handler['filename'] = str(filename)
+            filename.parent.mkdir(parents=True, exist_ok=True)
     logging.config.dictConfig(setting_dict)
     return logging.getLogger(name)
 
