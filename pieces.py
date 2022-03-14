@@ -68,7 +68,7 @@ def get_logger(name, setting_dict, file_anchor=None, mkdir=True):
         if filename:
             filename = Path(filename)
             if filename.is_absolute():
-                warnings.warn(f"{name}'s file already is absolute path!", ResourceWarning)
+                warnings.warn(f"Handler {name}'s file already is absolute path", ResourceWarning)
             else:
                 if file_anchor:
                     filename = abs_path(filename, anchor=file_anchor)
