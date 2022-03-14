@@ -109,23 +109,20 @@ def get_time_delta(new_time, old_time, unit='second', absolute=False, time_forma
     return delta.seconds / time_unit[unit]
 
 
-def write_to_csv(csv_name, rows, header=None, include_header=False):
+def write_to_csv(csv_name, rows, header=None):
     """
     将数据写入csv文件
 
     :param csv_name: 文件名
     :param rows: 待写入的数据
     :param header: 表头
-    :param include_header: 是否包含表头
     :return: None
     """
     csv_name = Path(csv_name).with_suffix('.csv')
 
     with open(csv_name, 'wt', encoding='utf8', newline='') as f:
         writer = csv.writer(f)
-        if include_header:
-            if not header:
-                raise ValueError("Your didn't provide header.")
+        if header is not None:
             writer.writerow(header)
         for row in rows:
             if isinstance(row, Mapping):
@@ -134,21 +131,18 @@ def write_to_csv(csv_name, rows, header=None, include_header=False):
                 writer.writerow(row)
 
 
-def write_to_xlsx(xlsx_name, rows, header=None, include_header=False):
+def write_to_xlsx(xlsx_name, rows, header=None):
     """
     将数据写入xslx文件
 
     :param xlsx_name: 文件名
     :param rows: 待写入的数据
     :param header: 表头
-    :param include_header: 是否包含表头
     :return: None
     """
     wb = Workbook()
     ws = wb.active
-    if include_header:
-        if not header:
-            raise ValueError("Your didn't provide header.")
+    if header is not None:
         ws.append(header)
     for row in rows:
         if isinstance(row, Mapping):
