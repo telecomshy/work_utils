@@ -2,7 +2,7 @@ from ftplib import FTP
 from pathlib import Path
 
 
-class FtpClient:
+class TidyFTP:
     """
     扩展原生FTP，增加一些方法
     """

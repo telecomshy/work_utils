@@ -157,7 +157,7 @@ def write_to_xlsx(xlsx_name, rows, header=None):
 
 def select_column(rows, col, flatten=True):
     """
-    选择二纬结构中的指定列
+    选择二维结构中的指定列
 
     :param rows: 二维数组结构
     :param col: 列名或者索引号
